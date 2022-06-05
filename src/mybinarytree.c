@@ -47,26 +47,59 @@ B_TREE init_tree(int len, int tree_array[]) {
     return root;
 }
 
-//返回前序遍历队列(非递归版本)
-int preorder_visit_queue(B_TREE tree, B_TREE queue) {
-
+/**
+ * 返回前序遍历队列(非递归版本)
+ * 思路：
+ * 1. 使用栈模拟的递归函数在访问当前节点时前面的节点路径
+ * 2. 当一路左孩子访问完毕后，转身右孩子迭代，迭代思路和左孩子一样
+ */
+void preorder_visit_queue(B_TREE tree, int len, B_TREE queue) {
+    if (tree == NULL) {
+        return;
+    }
+    //访问队列指针
+    int index = 0;
+    B_TREE stack[len];
+    int top = -1;
+    B_TREE temp = tree;
+    while (top != -1 || temp != NULL) {
+        while (temp != NULL) {
+            stack[++top] = temp;
+            queue[index++] = *temp;
+            temp = temp->left_node;
+        }
+        temp = stack[top--]->right_node;
+    }
 }
 
 //返回中序遍历队列(非递归版本)
-int inorder_visit_queue(B_TREE tree, B_TREE queue) {
-
+void inorder_visit_queue(B_TREE tree, int len, B_TREE queue) {
+    if (tree == NULL) {
+        return;
+    }
+    //访问队列指针
+    int index = 0;
+    B_TREE stack[len];
+    int top = -1;
+    B_TREE temp = tree;
+    while (top != -1 || temp != NULL) {
+        while (temp != NULL) {
+            stack[++top] = temp;
+            temp = temp->left_node;
+        }
+        temp = stack[top--];
+        queue[index++] = *temp;
+        temp = temp->right_node;
+    }
 }
 
 //返回后序遍历队列(非递归版本)
-int postorder_visit_queue(B_TREE tree, B_TREE queue) {
+void postorder_visit_queue(B_TREE tree, int len, B_TREE queue) {
 
 }
 
-//返回前序遍历队列(递归版本)
-int recursion_preorder_visit_queue(B_TREE tree, B_TREE queue) {
-    return recursion_preorder_visit_queue0(tree, queue, 0);
-}
-
+//先序遍历思路：
+//先将节点记录下来，再进行左右递归。记录节点模拟访问操作，记录后再去外部打印访问
 int recursion_preorder_visit_queue0(B_TREE tree, B_TREE queue, int count) {
     if (tree == NULL) {
         return count;
@@ -74,22 +107,43 @@ int recursion_preorder_visit_queue0(B_TREE tree, B_TREE queue, int count) {
     queue[count++] = *tree;
     printf("visit count:%d, data:%d\n", count, tree->data);
     count = recursion_preorder_visit_queue0(tree->left_node, queue, count);
-    count = recursion_preorder_visit_queue0(tree->right_node, queue, count);
+    return recursion_preorder_visit_queue0(tree->right_node, queue, count);
+}
+
+//返回前序遍历队列(递归版本)
+int recursion_preorder_visit_queue(B_TREE tree, B_TREE queue) {
+    return recursion_preorder_visit_queue0(tree, queue, 0);
+}
+
+int recursion_inorder_visit_queue0(B_TREE tree, B_TREE queue, int count) {
+    if (tree == NULL) {
+        return count;
+    }
+    count = recursion_inorder_visit_queue0(tree->left_node, queue, count);
+    queue[count++] = *tree;
+    printf("visit count:%d, data:%d\n", count, tree->data);
+    return recursion_inorder_visit_queue0(tree->right_node, queue, count);
 }
 
 //返回中序遍历队列(递归版本)
 int recursion_inorder_visit_queue(B_TREE tree, B_TREE queue) {
+    return recursion_inorder_visit_queue0(tree, queue, 0);
+}
 
+int recursion_postorder_visit_queue0(B_TREE tree, B_TREE queue, int count) {
+    if (tree == NULL) {
+        return count;
+    }
+    count = recursion_postorder_visit_queue0(tree->left_node, queue, count);
+    count = recursion_postorder_visit_queue0(tree->right_node, queue, count);
+    printf("visit count:%d, data:%d\n", count, tree->data);
+    queue[count++] = *tree;
+    return count;
 }
 
 //返回后序遍历队列(递归版本)
 int recursion_postorder_visit_queue(B_TREE tree, B_TREE queue) {
-
-}
-
-//返回后序遍历队列
-int post_order_visit_queue(B_TREE tree, B_TREE queue) {
-
+    return recursion_postorder_visit_queue0(tree, queue, 0);
 }
 
 //打印二叉树访问的返回结果，入参实际上是一个数组，不过用指针接一下

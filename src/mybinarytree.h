@@ -14,11 +14,11 @@ typedef struct _B_TREE_NODE{
 //数组格式为二叉树层次遍历，直到最后一个节点；节点为空的内容为-1
 B_TREE init_tree(int len, int tree_array[]);
 //返回前序遍历队列(非递归版本)
-int preorder_visit_queue(B_TREE tree, B_TREE_NODE queue[]);
+void preorder_visit_queue(B_TREE tree, int len, B_TREE_NODE queue[]);
 //返回中序遍历队列(非递归版本)
-int inorder_visit_queue(B_TREE tree, B_TREE_NODE queue[]);
+void inorder_visit_queue(B_TREE tree, int len, B_TREE_NODE queue[]);
 //返回后序遍历队列(非递归版本)
-int postorder_visit_queue(B_TREE tree, B_TREE_NODE queue[]);
+void postorder_visit_queue(B_TREE tree, int len, B_TREE_NODE queue[]);
 
 //返回前序遍历队列(递归版本)
 int recursion_preorder_visit_queue(B_TREE tree, B_TREE_NODE queue[]);
